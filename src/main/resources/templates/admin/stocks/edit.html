@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org/" lang="en">
+
+<head th:replace="/admin/layouts/head :: head"></head>
+
+<body class="hold-transition sidebar-mini dark-mode">
+    <div class="wrapper">
+        <nav th:replace="/admin/layouts/nav :: nav"></nav>
+        <aside th:replace="/admin/layouts/aside :: aside"></aside>
+        <!-- HEADER -->
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">INICIO</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a th:href="@{/admin}">Home</a></li>
+                                <li class="breadcrumb-item"><a th:href="@{/admin/stocks}">Stocks</a></li>
+                                <li class="breadcrumb-item active">Editar Stock</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="/admin/layouts/alerts :: alerts"></div>
+            <div class="container">
+                <div class="card shadow-lg mx-4">
+                    <div class="card-header">
+                        <h1 class="text-dark text-center border border-dark border-top-0 border-left-0 border-right-0">
+                            Editar Stock
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/stocks/update}" th:object="${stock}" method="post">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Cantidad: </label>
+                                <div class="col-sm-6">
+                                    <input type="number" min="0" th:field="*{cantidad}" class="form-control"
+                                        th:errorclass="'form-control is-invalid'">
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('cantidad')}"
+                                        th:errors="*{cantidad}"></small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Tipo de huevo:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="huevo_id" th:field="*{huevo}">
+                                        <option value="">--Seleccionar--</option>
+                                        <option th:each="huevo : ${huevos}" th:value="${huevo.id}"
+                                            th:text="${huevo.tipoHuevo}">
+                                        </option>
+                                    </select>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('huevo')}"
+                                        th:errors="*{huevo}"></small>
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-center">
+                                <a class="btn btn-danger" th:href="@{/admin/stocks}">Cancelar</a>
+                                <button class="btn btn-primary mx-2" type="submit">Editar Stock</button>
+                            </div>
+                            <input type="hidden" name="_method" value="PUT">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside th:replace="/admin/layouts/right-aside :: right-aside"></aside>
+
+        <footer th:replace="/admin/layouts/footer :: footer"></footer>
+    </div>
+</body>
+
+</html>

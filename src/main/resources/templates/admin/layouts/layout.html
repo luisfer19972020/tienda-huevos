@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org/" lang="en">
+
+<head th:replace="layouts/head :: head"></head>
+
+<body class="hold-transition sidebar-mini dark-mode">
+    <div class="wrapper">
+        <nav th:replace="layouts/nav :: nav"></nav>
+        <aside th:replace="layouts/aside :: aside"></aside>
+        <!-- HEADER -->
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">INICIO</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a th:href="@{/administracion}">Home</a></li>
+                                <li class="breadcrumb-item active">Pagina de inicio</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="layouts/alerts :: alerts"></div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside th:replace="layouts/right-aside :: right-aside"></aside>
+
+        <footer th:replace="layouts/footer :: footer"></footer>
+    </div>
+</body>
+
+</html>

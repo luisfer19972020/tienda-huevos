@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org/" lang="en">
+<!-- Products-->
+<div th:fragment="products" id="portfolio">
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div th:each="carton : ${cartones}" class="col-lg-4 col-sm-6">
+                <a class="portfolio-box" th:href="@{'/uploads/'+${carton.foto}}" title="Carton de huevos">
+                    <img class="img-fluid" th:src="@{'/uploads/'+${carton.foto}}" alt="..." />
+                    <div class="portfolio-box-caption">
+                        <div class="project-category text-white-50" th:text="${carton.producto}"></div>
+                        <div class="project-name" th:text="${carton.capacidad+' Huevos'}"></div>
+                        <button th:onclick="'comprar(' + ${carton.id} + ')'" class="btn text-white" style="background-color: rgb(252, 113, 14);">Comprar</button>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
