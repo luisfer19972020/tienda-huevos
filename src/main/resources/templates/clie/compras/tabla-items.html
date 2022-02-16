@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymleaf.org">
+<body>
+    <table th:fragment="tablaPlantillaItems" class="d-none">
+        <tbody id="tBodyPlantillaItems">
+            <tr id="row_{ID}">
+                <td class="d-none"><input type="hidden" value="{ID}" name="huevo_id[]"></td>
+                <td>
+                    <center>
+                        {TIPO}
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        ${PRECIO}
+                    </center>
+                </td>
+                <td><input type="number" id="cartones_{ID}" value="1" min="1" class="form-control col-sm-4"
+                        onchange="itemsHelper.calcularPago({ID},'{TIPO}',{PRECIO},this.value)">
+                </td>
+                <td class="text-center"><span id="huevos_totales{ID}"></span></td>
+                <td class="d-none"><input type="hidden" name="cantidad[]" id="cantidad_{ID}" value="0"></td>
+                <td>
+                    <center>
+                        <span id="total_pago{ID}"></span>
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        <button class="btn btn-danger" onclick="itemsHelper.eliminarRow({ID})">X</button>
+                    </center>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

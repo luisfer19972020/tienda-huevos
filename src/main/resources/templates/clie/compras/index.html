@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org/" xmlns:sec="http://www.thymleaf.org/extras/spring-security" lang="en">
+
+<head th:replace="/clie/layouts/head :: head"></head>
+
+<body id="page-top">
+    <!-- Navigation-->
+    <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <img class="img-circle" th:src="@{/img/logo.png}" alt="logo" width="50px">
+            <a class="navbar-brand" th:href="@{/}">Eggs Shopping</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                    <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a class="nav-link"
+                            th:href="@{/admin}">Administración</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item"><a class="nav-link"
+                            th:href="@{/login}">Iniciar
+                            Sesión</a></li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link" style="cursor: pointer;"
+                            onclick="event.preventDefault();document.getElementById('form-logout').submit()">Cerrar
+                            Sesión</a>
+                        <form th:action="@{/logout}" method="POST" id="form-logout" style="display: none;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Masthead-->
+    <header th:fragment="masthead" class="masthead" style="margin-bottom: 400px;">
+        <div class="container px-4 px-lg-5 h-100">
+            <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center ">
+                <div class="col-lg-8 align-self-end text-center">
+                    <div class="card mb-4 shadow-lg">
+                        <div class="card-header text-white" style="background-color: #f4623a;">
+                            <h2>Venta de productos
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="my-4">
+                                    <img class=" img-thumbnail" width="300px;" th:src="@{/uploads/}+${carton.foto}"
+                                        alt="">
+                                </div>
+
+                                <div class="border-secondary">
+                                    <p th:text="${carton.producto}"></p> Capacidad: <span
+                                        th:text="${carton.capacidad}"></span>
+                                    Huevos
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-lg pb-2">
+                    <form th:action="@{/ventas/store/}" method="POST">
+                        <div class="card-header text-center ">
+                            <h2> Factura de Productos</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class=" form-group ">
+                                <label for="buscar_huevo" class="col-form-label">Buscar Tipo</label>
+                                <div class="">
+                                    <input type="text" name="buscar_huevo" id="buscar_huevo" class="form-control">
+                                </div>
+                            </div>
+                            <table th:replace="/clie/compras/tabla-items :: tablaPlantillaItems"></table>
+                            <input type="hidden" name="carton_id" th:value="${carton.id}">
+                            <input type="hidden" id="capacidad_carton" th:value="${carton.capacidad}">
+                            <input type="hidden" id="status" th:value="${status}">
+                            <input th:each=" stock : ${stocks}" type="hidden"
+                                th:id="${'disponibles_'+stock.huevo.tipoHuevo}" th:value="${stock.cantidad}">
+                            <table id="tablaHuevos" class="table table-striped table-hover">
+                                <thead>
+                                    <th>Tipo de huevo</th>
+                                    <th>Precio por huevo</th>
+                                    <th>Cantidad de cartones</th>
+                                    <th>Huevos Totales</th>
+                                    <th>Total de Pago</th>
+                                    <th>Eliminar</th>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="submit" class="btn float-end text-white"
+                            style="background-color: #f4623a;">Comprar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <footer th:fragment="footer" class="bg-light py-5">
+        <div class="container px-4 px-lg-5">
+            <div class="small text-center text-muted">Todos los derechos reservados &copy; 2022 - Luis Fernando Correa
+                Meza</div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core theme JS-->
+
+        <script th:src="@{/js/scripts.js}"></script>
+        <script th:src="@{/js/jquery.min.js}"></script>
+        <script th:src="@{/js/jquery-ui.min.js}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    </footer>
+
+    <script type="text/javascript" th:fragment="javascript">
+        window.onload = function () {
+            switch (parseInt(document.getElementById('status').value)) {
+                case 0:
+                    itemsHelper.error('Error, Se debe agregar por lo menos un producto para la compra')
+                    break;
+                case 1:
+                    itemsHelper.success('Compra realizada con existo!!!')
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        $(document).ready(function () {
+
+            $('#buscar_huevo').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/ventas/cargar-huevos/" + request.term,
+                        dataType: "json",
+                        data: {
+                            term: request.term
+                        },
+                        success: function (data) {
+                            response($.map(data, function (huevo) {
+                                return {
+                                    value: huevo.id,
+                                    label: huevo.tipoHuevo,
+                                    precio: huevo.precio,
+                                };
+                            }));
+                        },
+                    });
+                },
+                select: function (event, response) {
+
+
+                    if (parseInt(document.getElementById('capacidad_carton').value) > parseInt(document.getElementById('disponibles_' + response.item.label).value)) {
+                        itemsHelper.error('Lo sentimos en este momento no contamos con huevos de tipo ' + response.item.label)
+                        return false;
+                    }
+                    if (itemsHelper.huevoRepetido(response.item.value)) {
+                        itemsHelper.errorGeneral("Lo sentimos este tipo de huevo ya sido agregado a la canasta!")
+                        return false;
+                    }
+
+
+                    var linea = $("#tBodyPlantillaItems").html();
+                    linea = linea.replace(/{ID}/g, response.item.value);
+                    linea = linea.replace(/{TIPO}/g, response.item.label);
+                    linea = linea.replace(/{PRECIO}/g, response.item.precio);
+
+                    $("#tablaHuevos tbody").append(linea);
+                    itemsHelper.calcularPago(response.item.value, response.item.label, response.item.precio, 1);
+                    return false;
+                }
+            });
+            $("form").submit(function () {
+                $("#tBodyPlantillaItems").remove();
+                return;
+            });
+        });
+        var itemsHelper = {
+            calcularPago: function (id, tipoHuevo, precio, cartones) {
+                let capacidad = document.getElementById('capacidad_carton').value;
+                let disponiples = document.getElementById('disponibles_' + tipoHuevo).value;
+                let huevos = capacidad * cartones;
+                if (huevos > disponiples) {
+                    this.error('Lo sentimos en este momento no contamos con demasiados huevos de tipo ' + tipoHuevo)
+                    let max = Math.round(disponiples / capacidad);
+                    huevos = max * capacidad;
+                    document.getElementById('cartones_' + id).value = max;
+                    document.getElementById('cantidad_' + id).value = huevos;
+                    $("#huevos_totales" + id).html(huevos)
+                    $("#total_pago" + id).html(max * capacidad * precio)
+                    return;
+                }
+                document.getElementById('cantidad_' + id).value = huevos;
+                $("#total_pago" + id).html(huevos * precio)
+                $("#huevos_totales" + id).html(huevos)
+            },
+            huevoRepetido: (id) => {
+                var resultado = false;
+                $('input[name="huevo_id[]"]').each(function () {
+                    if (parseInt(id) == parseInt($(this).val())) {
+                        resultado = true;
+                    }
+                });
+                return resultado;
+            },
+            eliminarRow: function (id) {
+                $('#row_' + id).remove();
+            },
+            error: function (error) {
+                Swal.fire(
+                    'Error!',
+                    error,
+                    'error'
+                )
+            },
+            success: function (success) {
+                Swal.fire(
+                    'Ok!',
+                    success,
+                    'success'
+                )
+            },
+        };
+
+
+    </script>
+</body>
+
+</html>

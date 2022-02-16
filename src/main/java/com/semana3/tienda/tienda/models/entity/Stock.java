@@ -15,7 +15,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.OnDelete;
@@ -34,7 +33,6 @@ public class Stock implements Serializable {
     private Huevo huevo;
 
     @NotNull
-    @Min(1)
     private Integer cantidad;
     @Temporal(TemporalType.DATE)
     @Column(name = "created_at")

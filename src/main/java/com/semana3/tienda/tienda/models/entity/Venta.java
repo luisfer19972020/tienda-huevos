@@ -1,7 +1,9 @@
 package com.semana3.tienda.tienda.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,13 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "ventas")
@@ -26,18 +26,24 @@ public class Venta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "huevo_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-
-    private Huevo huevo;
-
-    private Integer cantidad;
     private String comprador;
     @Temporal(TemporalType.DATE)
     @Column(name = "created_at")
     private Date createdAt;
     private static final long serialVersionUID = 1L;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "venta_id")
+    private List<LineaVenta> lineas;
+
+    @PrePersist
+    public void prepPersist() {
+        this.createdAt = new Date();
+    }
+
+    public Venta() {
+        this.lineas = new ArrayList<LineaVenta>();
+    }
 
     public Long getId() {
         return this.id;
@@ -45,22 +51,6 @@ public class Venta implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Huevo getHuevo() {
-        return this.huevo;
-    }
-
-    public void setHuevo(Huevo huevo) {
-        this.huevo = huevo;
-    }
-
-    public Integer getCantidad() {
-        return this.cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
     }
 
     public String getComprador() {
@@ -79,8 +69,26 @@ public class Venta implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public Double getTotal() {
-        return this.huevo.getPrecio() * cantidad;
+    public List<LineaVenta> getLineas() {
+        return this.lineas;
+    }
+
+    public void setLineas(List<LineaVenta> lineas) {
+        this.lineas = lineas;
+    }
+
+    // Meotods para añadir items o lineas y calcular
+    public void addItemFactura(LineaVenta linea) {
+        this.lineas.add(linea);
+    }
+
+    public Double calcularTotal() {
+        Double total = 0.0;
+
+        for (LineaVenta venta : lineas) {
+            total += venta.calcularImporte();
+        }
+        return total;
     }
 
 }

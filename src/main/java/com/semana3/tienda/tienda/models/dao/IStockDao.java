@@ -14,4 +14,7 @@ public interface IStockDao extends CrudRepository<Stock, Long> {
 
     @Query("select s from Stock s join fetch s.huevo h where s.id=?1")
     public Stock fetchStockWithHuevo(Long id);
+    
+    @Query("select s from Stock s join fetch s.huevo h where h.id=?1")
+    public Stock findByHuevoId(Long id);
 }

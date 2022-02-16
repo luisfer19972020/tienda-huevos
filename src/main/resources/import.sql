@@ -13,3 +13,10 @@ INSERT INTO cartones (capacidad, producto, foto,  created_at) VALUES(24, 'Cartó
 INSERT INTO cartones (capacidad, producto, foto,  created_at) VALUES(28, 'Cartón de huevo 7x4', 'paquete-28-huevos.png', '2020-01-20');
 INSERT INTO cartones (capacidad, producto, foto,  created_at) VALUES(32, 'Cartón de huevo 8x4', 'paquete-32-huevos.png', '2020-01-20');
 
+INSERT INTO users (enabled, password, username) VALUES (1, '$2a$10$G7qLnrOi5uQtzoQvNaBTAOq5b2GrImyAWEDN2iMDv4cp0ZAuKoHYC', 'Luis Correa');
+INSERT INTO users (enabled, password, username) VALUES (1, '$2a$10$e8hSR..DYKE/8o1hIuxFRuLBUAj8/gqrzpahF8azajZIV5AAqI9C2', 'admin');
+INSERT INTO users (enabled, password, username) VALUES (1, '$2a$10$e8hSR..DYKE/8o1hIuxFRuLBUAj8/gqrzpahF8azajZIV5AAqI9C2', 'Franco');
+
+INSERT INTO authorities (authority, user_id) VALUES ('ROLE_USER', 1);
+INSERT INTO authorities (authority, user_id) VALUES ('ROLE_ADMIN', 2);
+INSERT INTO authorities (authority, user_id) VALUES ('ROLE_USER', 3);

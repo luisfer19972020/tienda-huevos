@@ -12,9 +12,9 @@ public class TiendaController {
     @Autowired
     private ITiendaService tiendaService;
 
-    @GetMapping({ "", "/" })
+    @GetMapping({ "", "/","index" })
     public String home(Model model) {
         model.addAttribute("cartones", tiendaService.getAllCartones());
-        return "clie/layouts/layout";
+        return "clie/home";
     }
 }

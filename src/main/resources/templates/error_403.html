@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org/" lang="en">
+
+<head th:replace="/clie/layouts/head :: head"></head>
+
+<body id="page-top" class="justify-content-center bg-dark">
+    <div class="container my-5">
+        <center>
+            <img th:src="@{/img/logo.png}" alt="">
+        </center>
+        <div class="card shadow-lg bg-danger text-white">
+            <div class="card-header">
+                Error: Acceso denegado!
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Lo sentimos <span th:text="${#authentication.name}"></span> No tienes permiso a
+                    este recurso.</h5>
+                <a class="btn btn-outline-light" th:href="@{/}">Regresar al inicio.</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
