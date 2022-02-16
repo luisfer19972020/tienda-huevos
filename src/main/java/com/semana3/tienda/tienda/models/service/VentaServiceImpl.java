@@ -5,10 +5,12 @@ import java.util.List;
 import com.semana3.tienda.tienda.models.dao.ICartonDao;
 import com.semana3.tienda.tienda.models.dao.IHuevoDao;
 import com.semana3.tienda.tienda.models.dao.IStockDao;
+import com.semana3.tienda.tienda.models.dao.IUserDao;
 import com.semana3.tienda.tienda.models.dao.IVentaDao;
 import com.semana3.tienda.tienda.models.entity.Carton;
 import com.semana3.tienda.tienda.models.entity.Huevo;
 import com.semana3.tienda.tienda.models.entity.Stock;
+import com.semana3.tienda.tienda.models.entity.Usuario;
 import com.semana3.tienda.tienda.models.entity.Venta;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class VentaServiceImpl implements IVentaService {
 
     @Autowired
     private IVentaDao ventaDao;
+    
+    @Autowired
+    private IUserDao userDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -66,6 +71,14 @@ public class VentaServiceImpl implements IVentaService {
         return (List<Venta>) ventaDao.findAll();
     }
 
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Venta> fetchVentaWithUser() {
+        return ventaDao.fetchVentaWithUser();
+    }
+
+
     @Override
     @Transactional(readOnly = true)
     public Venta findById(Long id) {
@@ -81,8 +94,14 @@ public class VentaServiceImpl implements IVentaService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Venta fetchVentaWithLineasWithHuevos(Long id) {
         return ventaDao.fetchVentaWithLineasWithHuevos(id);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Usuario getUserByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
 }

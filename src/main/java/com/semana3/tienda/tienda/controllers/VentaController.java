@@ -2,7 +2,6 @@ package com.semana3.tienda.tienda.controllers;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import com.semana3.tienda.tienda.models.entity.Huevo;
 import com.semana3.tienda.tienda.models.entity.LineaVenta;
@@ -28,7 +27,7 @@ public class VentaController {
 
     @GetMapping({ "/admin/ventas/", "/admin/ventas" })
     public String index(Model model) {
-        model.addAttribute("ventas", ventaService.findAll());
+        model.addAttribute("ventas", ventaService.fetchVentaWithUser());
         return "admin/ventas/index.html";
     }
 
@@ -60,7 +59,7 @@ public class VentaController {
             return "clie/compras/index";
         }
         Venta venta = new Venta();
-        venta.setComprador(auth.getName());
+        venta.setUsuario(ventaService.getUserByUsername(auth.getName()));
         for (int i = 0; i < huevo_id.length; i++) {
             LineaVenta linea = new LineaVenta();
             linea.setCantidad(cantidad[i]);
@@ -68,6 +67,7 @@ public class VentaController {
             venta.addItemFactura(linea);
             ventaService.descuentaStock(huevo_id[i], cantidad[i]);
         }
+        venta.setTotal(venta.calcularTotal());
         ventaService.save(venta);
         flash.addFlashAttribute("success", "Compra realizada con exito con exito!!!");
         flash.addFlashAttribute("status", 1);

@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "lineas")
 public class LineaVenta implements Serializable {
@@ -20,7 +23,8 @@ public class LineaVenta implements Serializable {
     private Integer cantidad;
 
     @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "huevo_id")
+    @JoinColumn(name = "huevo_id",nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Huevo huevo;
 
     private static final long serialVersionUID = 1L;

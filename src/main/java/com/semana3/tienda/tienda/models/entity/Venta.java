@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -26,7 +27,6 @@ public class Venta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String comprador;
     @Temporal(TemporalType.DATE)
     @Column(name = "created_at")
     private Date createdAt;
@@ -35,6 +35,12 @@ public class Venta implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "venta_id")
     private List<LineaVenta> lineas;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Usuario usuario;
+
+    private Double total;
 
     @PrePersist
     public void prepPersist() {
@@ -53,14 +59,6 @@ public class Venta implements Serializable {
         this.id = id;
     }
 
-    public String getComprador() {
-        return this.comprador;
-    }
-
-    public void setComprador(String comprador) {
-        this.comprador = comprador;
-    }
-
     public Date getCreatedAt() {
         return this.createdAt;
     }
@@ -75,6 +73,23 @@ public class Venta implements Serializable {
 
     public void setLineas(List<LineaVenta> lineas) {
         this.lineas = lineas;
+    }
+
+    public Usuario getUsuario() {
+        return this.usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+    
+
+    public Double getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
     // Meotods para añadir items o lineas y calcular

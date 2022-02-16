@@ -43,8 +43,8 @@
                                 <tbody>
                                     <tr th:each="venta : ${ventas}">
                                         <td th:text="${venta.id}"></td>
-                                        <td th:text="${venta.comprador}"></td>
-                                        <td th:text="${'$'+venta.calcularTotal}"></td>
+                                        <td th:text="${venta.usuario.username}"></td>
+                                        <td th:text="${'$'+venta.total}"></td>
                                         <td th:text="${#calendars.format(venta.createdAt,'dd/MM/yyyy')}"></td>
                                         <td>
                                             <a class="btn btn-success" th:href="@{/admin/ventas/show/}+${venta.id}">Ver
